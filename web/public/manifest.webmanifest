@@ -1,0 +1,17 @@
+{
+  "name": "星图目标管理",
+  "short_name": "星图",
+  "description": "把目标变成恒星，把 routine 变成行星的本地目标管理 PWA。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
