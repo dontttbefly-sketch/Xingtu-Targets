@@ -304,8 +304,8 @@ private struct StarNode: View {
     var body: some View {
         VStack(spacing: 7) {
             ZStack {
-                CelestialPlanet(
-                    tone: planetTone,
+                StellarBody(
+                    tone: stellarTone,
                     progress: completionGlow,
                     size: innerSize,
                     outerSize: outerSize,
@@ -368,29 +368,29 @@ private struct StarNode: View {
         shimmer && !isDimmed ? 8 : 0
     }
 
-    private var planetTone: PlanetRenderTone {
-        PlanetRenderTone(starfieldPlanetTone(index: index, customHex: goal.colorHex))
+    private var stellarTone: StellarRenderTone {
+        StellarRenderTone(starfieldStellarTone(index: index, customHex: goal.colorHex))
     }
 }
 
-private struct PlanetRenderTone {
+private struct StellarRenderTone {
     var core: Color
-    var mantle: Color
-    var shadow: Color
-    var atmosphere: Color
+    var corona: Color
+    var flare: Color
+    var halo: Color
     var accent: Color
 
-    init(_ tone: StarfieldPlanetTone) {
+    init(_ tone: StarfieldStellarTone) {
         self.core = Color(starfieldHex: tone.coreHex) ?? .white
-        self.mantle = Color(starfieldHex: tone.mantleHex) ?? Color(red: 0.58, green: 0.74, blue: 0.86)
-        self.shadow = Color(starfieldHex: tone.shadowHex) ?? Color(red: 0.08, green: 0.10, blue: 0.16)
-        self.atmosphere = Color(starfieldHex: tone.atmosphereHex) ?? Color(red: 0.56, green: 0.88, blue: 1.0)
+        self.corona = Color(starfieldHex: tone.coronaHex) ?? Color(red: 1.0, green: 0.82, blue: 0.42)
+        self.flare = Color(starfieldHex: tone.flareHex) ?? Color(red: 1.0, green: 0.66, blue: 0.28)
+        self.halo = Color(starfieldHex: tone.haloHex) ?? Color(red: 1.0, green: 0.92, blue: 0.64)
         self.accent = Color(starfieldHex: tone.accentHex) ?? Color(red: 0.70, green: 0.92, blue: 0.82)
     }
 }
 
-private struct CelestialPlanet: View {
-    var tone: PlanetRenderTone
+private struct StellarBody: View {
+    var tone: StellarRenderTone
     var progress: Double
     var size: CGFloat
     var outerSize: CGFloat
@@ -400,72 +400,71 @@ private struct CelestialPlanet: View {
 
     var body: some View {
         ZStack {
+            StellarRays(
+                tone: tone,
+                size: size,
+                progress: progress,
+                isFocused: isFocused,
+                isDimmed: isDimmed
+            )
+
             Circle()
                 .fill(
                     RadialGradient(
                         colors: [
-                            tone.atmosphere.opacity(isDimmed ? 0.07 : 0.24 + progress * 0.14),
-                            tone.accent.opacity(isDimmed ? 0.03 : 0.10 + progress * 0.10),
+                            .white.opacity(isDimmed ? 0.05 : 0.16 + progress * 0.10),
+                            tone.halo.opacity(isDimmed ? 0.06 : 0.34 + progress * 0.18),
+                            tone.corona.opacity(isDimmed ? 0.03 : 0.16 + progress * 0.12),
                             .clear
                         ],
                         center: .center,
-                        startRadius: 5,
-                        endRadius: outerSize * 0.54
+                        startRadius: 2,
+                        endRadius: outerSize * 0.78
                     )
                 )
-                .frame(width: outerSize + shimmerExpansion, height: outerSize + shimmerExpansion)
-                .blur(radius: isFocused ? 14 : 8)
+                .frame(width: outerSize * 1.32 + shimmerExpansion, height: outerSize * 1.32 + shimmerExpansion)
+                .blur(radius: isFocused ? 18 : 11)
                 .blendMode(.screen)
 
             Circle()
-                .stroke(
-                    AngularGradient(
+                .fill(
+                    RadialGradient(
                         colors: [
-                            tone.atmosphere.opacity(0.02),
-                            tone.atmosphere.opacity(isDimmed ? 0.08 : 0.42),
-                            tone.accent.opacity(isDimmed ? 0.04 : 0.24),
-                            tone.atmosphere.opacity(0.02)
+                            .white.opacity(isDimmed ? 0.08 : 0.28),
+                            tone.corona.opacity(isDimmed ? 0.14 : 0.62),
+                            tone.flare.opacity(isDimmed ? 0.05 : 0.30),
+                            .clear
                         ],
-                        center: .center
-                    ),
-                    lineWidth: isFocused ? 1.2 : 0.8
+                        center: .center,
+                        startRadius: 1,
+                        endRadius: size * 1.10
+                    )
                 )
-                .frame(width: size + 18, height: size + 18)
-                .blur(radius: 0.5)
+                .frame(width: size * 1.95, height: size * 1.95)
+                .blur(radius: isFocused ? 5 : 3)
+                .blendMode(.screen)
 
             ZStack {
                 Circle()
                     .fill(
                         RadialGradient(
                             colors: [
-                                Color.white.opacity(isDimmed ? 0.18 : 0.90),
-                                tone.core.opacity(isDimmed ? 0.40 : 1),
-                                tone.mantle.opacity(isDimmed ? 0.28 : 0.95),
-                                tone.shadow.opacity(isDimmed ? 0.68 : 0.96)
+                                Color.white.opacity(isDimmed ? 0.34 : 1),
+                                tone.core.opacity(isDimmed ? 0.42 : 1),
+                                tone.corona.opacity(isDimmed ? 0.26 : 0.94),
+                                tone.flare.opacity(isDimmed ? 0.14 : 0.74)
                             ],
-                            center: UnitPoint(x: 0.32, y: 0.24),
+                            center: UnitPoint(x: 0.42, y: 0.35),
                             startRadius: 1,
-                            endRadius: size * 0.82
+                            endRadius: size * 0.54
                         )
                     )
+                    .blur(radius: isDimmed ? 0.4 : 0)
 
-                PlanetSurfaceBands(tone: tone, size: size, isDimmed: isDimmed)
+                StellarPlasmaWisps(tone: tone, size: size, isDimmed: isDimmed)
                     .clipShape(Circle())
-                    .opacity(isDimmed ? 0.28 : 0.72)
-
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                .clear,
-                                tone.shadow.opacity(isDimmed ? 0.44 : 0.28),
-                                tone.shadow.opacity(isDimmed ? 0.74 : 0.52)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .clipShape(Circle())
+                    .opacity(isDimmed ? 0.12 : 0.58)
+                    .blendMode(.screen)
 
                 Circle()
                     .trim(from: 0, to: CGFloat(max(0.05, progress)))
@@ -473,7 +472,7 @@ private struct CelestialPlanet: View {
                         LinearGradient(
                             colors: [
                                 tone.accent.opacity(isDimmed ? 0.18 : 0.86),
-                                tone.atmosphere.opacity(isDimmed ? 0.12 : 0.50)
+                                tone.corona.opacity(isDimmed ? 0.12 : 0.62)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -487,82 +486,171 @@ private struct CelestialPlanet: View {
                     .stroke(
                         AngularGradient(
                             colors: [
-                                .white.opacity(isDimmed ? 0.10 : 0.46),
-                                tone.atmosphere.opacity(isDimmed ? 0.08 : 0.28),
-                                tone.shadow.opacity(isDimmed ? 0.18 : 0.42),
-                                .white.opacity(isDimmed ? 0.05 : 0.22)
+                                .white.opacity(isDimmed ? 0.20 : 0.72),
+                                tone.halo.opacity(isDimmed ? 0.10 : 0.46),
+                                tone.flare.opacity(isDimmed ? 0.08 : 0.34),
+                                .white.opacity(isDimmed ? 0.12 : 0.58)
                             ],
                             center: .center
                         ),
-                        lineWidth: 1.1
+                        lineWidth: isFocused ? 1.4 : 1.1
                     )
 
                 Circle()
                     .fill(
                         RadialGradient(
                             colors: [
-                                .white.opacity(isDimmed ? 0.08 : 0.50),
-                                .white.opacity(isDimmed ? 0.02 : 0.12),
+                                .white.opacity(isDimmed ? 0.18 : 0.86),
+                                tone.core.opacity(isDimmed ? 0.06 : 0.34),
                                 .clear
                             ],
                             center: .center,
                             startRadius: 0,
-                            endRadius: size * 0.23
+                            endRadius: size * 0.30
                         )
                     )
-                    .frame(width: size * 0.46, height: size * 0.46)
-                    .offset(x: -size * 0.16, y: -size * 0.18)
+                    .frame(width: size * 0.62, height: size * 0.62)
+
+                StellarSpark(tone: tone, size: size, isDimmed: isDimmed)
             }
             .frame(width: size, height: size)
             .shadow(
-                color: tone.atmosphere.opacity(isDimmed ? 0.12 : 0.34 + progress * 0.22),
-                radius: (isFocused ? 26 : 17) + shimmerExpansion * 0.42,
-                y: isFocused ? 0 : 2
+                color: tone.halo.opacity(isDimmed ? 0.14 : 0.64 + progress * 0.18),
+                radius: (isFocused ? 34 : 24) + shimmerExpansion * 0.70
             )
         }
     }
 }
 
-private struct PlanetSurfaceBands: View {
-    var tone: PlanetRenderTone
+private struct StellarRays: View {
+    var tone: StellarRenderTone
     var size: CGFloat
+    var progress: Double
+    var isFocused: Bool
     var isDimmed: Bool
 
     var body: some View {
         ZStack {
-            ForEach(0..<4, id: \.self) { band in
+            ForEach(0..<12, id: \.self) { ray in
                 Capsule()
                     .fill(
                         LinearGradient(
                             colors: [
                                 .clear,
-                                bandColor(band).opacity(isDimmed ? 0.10 : bandOpacity(band)),
+                                rayColor(ray).opacity(isDimmed ? 0.04 : rayOpacity(ray)),
                                 .clear
                             ],
-                            startPoint: .leading,
-                            endPoint: .trailing
+                            startPoint: .top,
+                            endPoint: .bottom
                         )
                     )
+                    .frame(width: rayWidth(ray), height: rayHeight(ray))
+                    .offset(y: -rayHeight(ray) * 0.38)
+                    .rotationEffect(.degrees(Double(ray) * 30))
+                    .blur(radius: ray.isMultiple(of: 3) ? 2.0 : 1.1)
+                    .blendMode(.screen)
+            }
+        }
+        .frame(width: size * 2.7, height: size * 2.7)
+    }
+
+    private func rayWidth(_ index: Int) -> CGFloat {
+        index.isMultiple(of: 3) ? 2.8 : 1.4
+    }
+
+    private func rayHeight(_ index: Int) -> CGFloat {
+        let base = size * (isFocused ? 1.62 : 1.18)
+        let variance = CGFloat(index % 4) * size * 0.08
+        return base + variance
+    }
+
+    private func rayOpacity(_ index: Int) -> Double {
+        let base = index.isMultiple(of: 3) ? 0.28 : 0.14
+        return base + progress * 0.14
+    }
+
+    private func rayColor(_ index: Int) -> Color {
+        index.isMultiple(of: 2) ? tone.halo : tone.flare
+    }
+}
+
+private struct StellarPlasmaWisps: View {
+    var tone: StellarRenderTone
+    var size: CGFloat
+    var isDimmed: Bool
+
+    var body: some View {
+        ZStack {
+            ForEach(0..<5, id: \.self) { wisp in
+                Circle()
+                    .trim(from: wispStart(wisp), to: wispEnd(wisp))
+                    .stroke(
+                        AngularGradient(
+                            colors: [
+                                .clear,
+                                wispColor(wisp).opacity(isDimmed ? 0.05 : wispOpacity(wisp)),
+                                .clear
+                            ],
+                            center: .center
+                        ),
+                        style: StrokeStyle(lineWidth: max(1, size * 0.018), lineCap: .round)
+                    )
                     .frame(
-                        width: size * (0.94 - CGFloat(band) * 0.08),
-                        height: max(3, size * (0.052 + CGFloat(band % 2) * 0.018))
+                        width: size * (0.50 + CGFloat(wisp) * 0.12),
+                        height: size * (0.50 + CGFloat(wisp) * 0.12)
                     )
-                    .rotationEffect(.degrees(-15 + Double(band) * 8))
-                    .offset(
-                        x: CGFloat(band.isMultiple(of: 2) ? -4 : 5),
-                        y: -size * 0.22 + CGFloat(band) * size * 0.14
-                    )
-                    .blur(radius: band == 0 ? 0.55 : 0.25)
+                    .rotationEffect(.degrees(Double(wisp) * 38 - 24))
+                    .blur(radius: wisp.isMultiple(of: 2) ? 0.4 : 0.8)
             }
         }
     }
 
-    private func bandColor(_ index: Int) -> Color {
-        index.isMultiple(of: 2) ? tone.accent : tone.atmosphere
+    private func wispStart(_ index: Int) -> CGFloat {
+        CGFloat(0.04 + Double(index) * 0.035)
     }
 
-    private func bandOpacity(_ index: Int) -> Double {
-        index.isMultiple(of: 2) ? 0.44 : 0.28
+    private func wispEnd(_ index: Int) -> CGFloat {
+        min(0.92, wispStart(index) + CGFloat(0.34 + Double(index % 2) * 0.12))
+    }
+
+    private func wispColor(_ index: Int) -> Color {
+        index.isMultiple(of: 2) ? tone.core : tone.flare
+    }
+
+    private func wispOpacity(_ index: Int) -> Double {
+        index.isMultiple(of: 2) ? 0.50 : 0.34
+    }
+}
+
+private struct StellarSpark: View {
+    var tone: StellarRenderTone
+    var size: CGFloat
+    var isDimmed: Bool
+
+    var body: some View {
+        ZStack {
+            Capsule()
+                .fill(
+                    LinearGradient(
+                        colors: [.clear, Color.white.opacity(isDimmed ? 0.12 : 0.78), .clear],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .frame(width: size * 1.14, height: max(1.2, size * 0.020))
+
+            Capsule()
+                .fill(
+                    LinearGradient(
+                        colors: [.clear, tone.halo.opacity(isDimmed ? 0.08 : 0.48), .clear],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(width: max(1.2, size * 0.018), height: size * 1.14)
+        }
+        .blur(radius: 0.35)
+        .blendMode(.screen)
     }
 }
 

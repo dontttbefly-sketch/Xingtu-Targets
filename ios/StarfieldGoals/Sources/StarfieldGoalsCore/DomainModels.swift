@@ -384,80 +384,80 @@ public struct StarfieldMotionProfile: Equatable, Sendable {
     )
 }
 
-public struct StarfieldPlanetTone: Equatable, Sendable {
+public struct StarfieldStellarTone: Equatable, Sendable {
     public var coreHex: String
-    public var mantleHex: String
-    public var shadowHex: String
-    public var atmosphereHex: String
+    public var coronaHex: String
+    public var flareHex: String
+    public var haloHex: String
     public var accentHex: String
 
     public init(
         coreHex: String,
-        mantleHex: String,
-        shadowHex: String,
-        atmosphereHex: String,
+        coronaHex: String,
+        flareHex: String,
+        haloHex: String,
         accentHex: String
     ) {
         self.coreHex = coreHex
-        self.mantleHex = mantleHex
-        self.shadowHex = shadowHex
-        self.atmosphereHex = atmosphereHex
+        self.coronaHex = coronaHex
+        self.flareHex = flareHex
+        self.haloHex = haloHex
         self.accentHex = accentHex
     }
 }
 
-private let starfieldPlanetTonePalette: [StarfieldPlanetTone] = [
-    StarfieldPlanetTone(
-        coreHex: "#FFD36A",
-        mantleHex: "#F49E5C",
-        shadowHex: "#2B1830",
-        atmosphereHex: "#FFE09A",
+private let starfieldStellarTonePalette: [StarfieldStellarTone] = [
+    StarfieldStellarTone(
+        coreHex: "#FFF8D6",
+        coronaHex: "#FFD36A",
+        flareHex: "#FFB14A",
+        haloHex: "#FFE7A3",
         accentHex: "#8EE7D1"
     ),
-    StarfieldPlanetTone(
-        coreHex: "#9DE6F6",
-        mantleHex: "#5FB9C8",
-        shadowHex: "#10283B",
-        atmosphereHex: "#74E2FF",
+    StarfieldStellarTone(
+        coreHex: "#F4FDFF",
+        coronaHex: "#8EE6FF",
+        flareHex: "#5FB9FF",
+        haloHex: "#9DEBFF",
         accentHex: "#BEE7D0"
     ),
-    StarfieldPlanetTone(
-        coreHex: "#FF9A86",
-        mantleHex: "#D9678A",
-        shadowHex: "#341A2B",
-        atmosphereHex: "#FFB49E",
+    StarfieldStellarTone(
+        coreHex: "#FFF1EC",
+        coronaHex: "#FF8F78",
+        flareHex: "#FF5F96",
+        haloHex: "#FFB49E",
         accentHex: "#FFD36A"
     ),
-    StarfieldPlanetTone(
-        coreHex: "#A7E29A",
-        mantleHex: "#62BFA2",
-        shadowHex: "#132D2A",
-        atmosphereHex: "#BDECCB",
+    StarfieldStellarTone(
+        coreHex: "#F2FFE8",
+        coronaHex: "#A7E29A",
+        flareHex: "#62D6B6",
+        haloHex: "#BDECCB",
         accentHex: "#FFD36A"
     ),
-    StarfieldPlanetTone(
-        coreHex: "#C9A7FF",
-        mantleHex: "#7E89E8",
-        shadowHex: "#191B3D",
-        atmosphereHex: "#D8C5FF",
+    StarfieldStellarTone(
+        coreHex: "#F8F0FF",
+        coronaHex: "#C9A7FF",
+        flareHex: "#7E89E8",
+        haloHex: "#D8C5FF",
         accentHex: "#92E4D0"
     )
 ]
 
-public func starfieldPlanetTone(index: Int, customHex: String?) -> StarfieldPlanetTone {
+public func starfieldStellarTone(index: Int, customHex: String?) -> StarfieldStellarTone {
     if let customHex = normalizedStarfieldHex(customHex) {
-        return StarfieldPlanetTone(
-            coreHex: customHex,
-            mantleHex: customHex,
-            shadowHex: "#151A2A",
-            atmosphereHex: customHex,
+        return StarfieldStellarTone(
+            coreHex: "#FFFFFF",
+            coronaHex: customHex,
+            flareHex: customHex,
+            haloHex: customHex,
             accentHex: "#BDECCB"
         )
     }
 
-    let count = starfieldPlanetTonePalette.count
+    let count = starfieldStellarTonePalette.count
     let safeIndex = ((index % count) + count) % count
-    return starfieldPlanetTonePalette[safeIndex]
+    return starfieldStellarTonePalette[safeIndex]
 }
 
 private func normalizedStarfieldHex(_ value: String?) -> String? {

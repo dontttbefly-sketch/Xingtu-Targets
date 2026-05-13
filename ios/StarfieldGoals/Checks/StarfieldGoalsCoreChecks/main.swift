@@ -398,20 +398,21 @@ private func runTopChromeChecks() throws {
 }
 
 private func runVisualToneChecks() throws {
-    let first = starfieldPlanetTone(index: 0, customHex: nil)
-    let sixth = starfieldPlanetTone(index: 5, customHex: nil)
-    try expect(first == sixth, "planet tone palette should cycle predictably")
-    try expect(first.coreHex == "#FFD36A", "first planet tone keeps a warm anchor")
-    try expect(first.shadowHex != first.coreHex, "planet tone should include real shadow contrast")
-    try expect(first.atmosphereHex != first.shadowHex, "planet atmosphere should stay luminous")
+    let first = starfieldStellarTone(index: 0, customHex: nil)
+    let sixth = starfieldStellarTone(index: 5, customHex: nil)
+    try expect(first == sixth, "stellar tone palette should cycle predictably")
+    try expect(first.coreHex == "#FFF8D6", "first stellar tone keeps a white-hot core")
+    try expect(first.coronaHex == "#FFD36A", "first stellar tone keeps a warm corona")
+    try expect(first.flareHex != first.coreHex, "stellar tone should include visible flare color")
+    try expect(first.haloHex != first.coreHex, "stellar halo should not be a flat body color")
 
-    let custom = starfieldPlanetTone(index: 2, customHex: " 8ee6ff ")
-    try expect(custom.coreHex == "#8EE6FF", "custom planet color should normalize hex input")
-    try expect(custom.mantleHex == "#8EE6FF", "custom planet keeps user color as the main body")
-    try expect(custom.shadowHex == "#151A2A", "custom planet still receives a harmonized deep shadow")
+    let custom = starfieldStellarTone(index: 2, customHex: " 8ee6ff ")
+    try expect(custom.coreHex == "#FFFFFF", "custom stellar color should still render as a self-luminous white core")
+    try expect(custom.coronaHex == "#8EE6FF", "custom stellar color should normalize into the corona")
+    try expect(custom.haloHex == "#8EE6FF", "custom stellar color should drive the outer glow")
 
-    let fallback = starfieldPlanetTone(index: 2, customHex: "#NOPE")
-    try expect(fallback.coreHex == "#FF9A86", "invalid custom color should fall back to palette")
+    let fallback = starfieldStellarTone(index: 2, customHex: "#NOPE")
+    try expect(fallback.coronaHex == "#FF8F78", "invalid custom color should fall back to stellar palette")
 }
 
 private func distance(_ lhs: StarfieldUnitPoint, _ rhs: StarfieldUnitPoint) -> Double {
