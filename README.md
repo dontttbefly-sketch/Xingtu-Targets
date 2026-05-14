@@ -4,10 +4,11 @@
 
 ![星图目标管理截图](docs/assets/starfield-goals-screenshot.png)
 
-这个仓库分成两个清晰工程：
+这个仓库分成三个清晰工程：
 
 - `web/`：当前可用的 React/Vite Web/PWA 版本。
-- `macos/`：准备开发的原生 SwiftUI macOS 版本。
+- `macos/`：正在开发的原生 SwiftUI macOS 版本。
+- `ios/`：正在开发的原生 ios 版本。
 
 ## Web 版
 
@@ -35,4 +36,4 @@ npm run e2e
 
 ## ios 原生版
 
-已开发完成，等待上架App Store...
+标准框架已开发完成，等待上架App Store...
