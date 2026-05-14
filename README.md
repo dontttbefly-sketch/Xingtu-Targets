@@ -16,23 +16,19 @@
 
 核心想法很简单：让目标管理有一点仪式感，但不牺牲日常使用效率。
 
-## 截图预览
+## Web 版截图预览
 
-### 星图总览
+### 1. 星图总览
 
 ![星图总览](docs/assets/starfield-goals-overview.png)
 
-### 恒星聚焦
+### 2. 恒星档案
 
-![恒星聚焦](docs/assets/starfield-goals-focus.png)
+![恒星档案](docs/assets/starfield-goals-dossier.png)
 
-### 今晚复盘
+### 3. 今晚复盘
 
 ![今晚复盘](docs/assets/starfield-goals-review.png)
-
-### 数据舱与本地备份
-
-![数据舱与本地备份](docs/assets/starfield-goals-data-panel.png)
 
 ## 当前功能
 
