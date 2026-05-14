@@ -32,3 +32,7 @@ npm run e2e
 工程骨架在 `macos/StarfieldGoals/`。第一版目标是用 SwiftUI 原生实现核心目标管理与星图体验，不使用 Electron，也不使用 WKWebView 套壳。
 
 详细方案见 [macos/StarfieldGoals/PROJECT_PLAN.md](macos/StarfieldGoals/PROJECT_PLAN.md)。
+
+## ios 原生版
+
+已开发完成，等待上架App Store...
