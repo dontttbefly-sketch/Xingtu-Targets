@@ -58,15 +58,75 @@
 
 Web 版是当前最完整、最适合体验的版本，使用 React、TypeScript 和 Vite 构建。
 
-### 本地运行
+### 环境要求
+
+先在电脑上安装：
+
+- Git：用于从 GitHub 下载项目。
+- Node.js：建议使用 `20.19.0` 或更高版本；也可以使用 `22.12.0` 或更高版本。
+- npm：随 Node.js 一起安装即可。
+
+检查是否安装成功：
+
+```bash
+git --version
+node -v
+npm -v
+```
+
+### 第一次启动
+
+从 GitHub 下载项目：
+
+```bash
+git clone https://github.com/dontttbefly-sketch/Xingtu-Targets.git
+cd Xingtu-Targets
+```
+
+进入 Web 工程并安装依赖：
 
 ```bash
 cd web
-npm install
+npm ci
+```
+
+启动开发服务器：
+
+```bash
 npm run dev -- --port 4173
 ```
 
-打开：
+看到终端输出类似下面内容后，打开浏览器访问：
+
+```text
+http://127.0.0.1:4173/
+```
+
+如果终端显示的 `Local` 地址不是 `4173`，以终端实际显示的地址为准。
+
+如果 `4173` 端口被占用，可以换一个端口：
+
+```bash
+npm run dev -- --port 5173
+```
+
+然后访问：
+
+```text
+http://127.0.0.1:5173/
+```
+
+### 打包预览
+
+如果想验证生产构建：
+
+```bash
+cd web
+npm run build
+npm run preview -- --port 4173
+```
+
+然后打开：
 
 ```text
 http://127.0.0.1:4173/
@@ -80,6 +140,19 @@ npm test
 npm run build
 npm run e2e
 ```
+
+首次运行端到端测试前，如果 Playwright 提示缺少浏览器，可以在 `web/` 目录执行：
+
+```bash
+npx playwright install
+```
+
+### 常见问题
+
+- `npm ci` 报 Node 版本不兼容：升级 Node.js 到 `20.19.0+`、`22.12.0+` 或更高版本。
+- 浏览器打不开页面：确认 `npm run dev` 的终端还在运行，并使用终端里显示的本地地址。
+- 端口被占用：把 `--port 4173` 改成其他端口，例如 `--port 5173`。
+- 页面数据没有同步到别人电脑：Web 版默认使用浏览器本地存储。需要迁移数据时，在数据舱导出 JSON 备份，再到另一台电脑导入。
 
 ## iOS 原生版
 
